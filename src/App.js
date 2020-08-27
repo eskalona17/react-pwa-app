@@ -4,11 +4,13 @@ import "./App.css";
 
 const App = () => {
   const [query, setQuery] = useState("");
+  const [weather, setWeather] = useState({});
 
   const Search = async (e) => {
     if (e.key === "Enter") {
       const data = await fetchWeather(query);
-      console.log(data);
+      setWeather(data);
+      setQuery("");
     }
   };
   return (
@@ -21,6 +23,26 @@ const App = () => {
         onChange={(e) => setQuery(e.target.value)}
         onKeyPress={Search}
       />
+      {weather.main && (
+        <div className="city">
+          <h2 className="city-name">
+            <span>{weather.name}</span>
+            <sup>{weather.sys.country}</sup>
+          </h2>
+          <div className="city-temp">
+            {Math.round(weather.main.temp)}
+            <sup>&deg;C</sup>
+            <div className="info">
+              <img
+                src={`https://openweathermap.org/img/wn/${weather.weather[0].icon}@2x.png`}
+                alt={weather.weather[0].description}
+                className="city-icon"
+              />
+              <p>{weather.weather[0].description}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
